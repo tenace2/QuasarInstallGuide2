@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Obsidian Vault]]></title><description><![CDATA[Obsidian digital garden]]></description><link>http://github.com/dylang/node-rss</link><image><url>lib/media/favicon.png</url><title>Obsidian Vault</title><link></link></image><generator>Webpage HTML Export plugin for Obsidian</generator><lastBuildDate>Sun, 09 Mar 2025 02:15:52 GMT</lastBuildDate><atom:link href="lib/rss.xml" rel="self" type="application/rss+xml"/><pubDate>Sun, 09 Mar 2025 02:15:51 GMT</pubDate><ttl>60</ttl><dc:creator></dc:creator><item><title><![CDATA[HOW TO SETUP A QUASAR-VUE CAPACITOR ANDROID PROJECT]]></title><description><![CDATA[ 
+ <br><br><img alt="logos.png" src="quasarscaffold/logos.png"><br><br>There are a number of steps you need to perform to properly scaffold and configure your Quasar-Capacitor project for creating Android apps using Vue.js.<br>This guide assumes:<br>
+<br>You are running VS Code (though in general this should work with other IDEs)
+<br>You are familiar with Vue.js, as it is a foundation for Quasar and an initial Vue.js project is scaffolded when you initialize Quasar
+<br><br>I have attempted to show Information that has been directly gleaned from the internet and then "cut-n-pasted" incorporated into this guide between sets of lines and "Per research".<br>This guide is intended for someone who is starting out on their journey (like me). Experienced developers will likely find most of the information, well, superfluous.<br> Disclaimer &amp; Rant
+
+There are very probably egregious errors, omissions, and mistakes in this guide. If you find them, blame a couple things:<br>
+-The paucity of existing documentation on the Quasar and Capacitor websites (as of Feb 2025).<br>
+--The Quasar web site doesn't have much to say about Capacitor.<br>
+--And the Capacitor website doesn't have much to say about Quasar.<br>
+If there was actual documentation on how to properly integrate these two frameworks, I would not have found putting this guide together worth the effort in the first place.<br>
+-Oh, and also blame the fact there is so much to learn about Quasar!...and I'm just learning.
+The following image pretty much captures the experience of trying to get a clean install of a Quasar-Capacitor-Android project: What a headache.
+<img alt="headcrusher.png" src="quasarscaffold/headcrusher.png">
+<br><br>Quasar and Capacitor are truly wonderful, but I've found it a bit difficult to get them to behave, so hence this guide. At the end of all this you should behold the following desktop configuration!<br><img alt="desktop.png" src="quasarscaffold/desktop.png"><br>Quick links to Quasar and Why Quasar?
+ Here's a few links to relevant information
+  <a rel="noopener nofollow" class="external-link" href="https://capacitorjs.com/" target="_blank">https://capacitorjs.com/</a>
+  <a rel="noopener nofollow" class="external-link" href="https://quasar.dev/" target="_blank">https://quasar.dev/</a>
+  <a rel="noopener nofollow" class="external-link" href="https://vuejs.org/" target="_blank">https://vuejs.org/</a>
+Note of Why Quasar?<br>
+Take the notes below with a grain-of-salt...some of it is pure opinion.  Do your own reasearch!
+There are other frameworks out there besides Quasar that will help develop cross platform apps with one code base to target multiple platforms, such as Flutter, React Native, and Xamarin, and Ionic.<br>
+<br>
+Flutter is a Google thing...and Google simply abandons products without a second thought. I've been burned so many times relying on a Google platform or framework that simply disappeared, that I would never adopt anything they make unless forced too by their market monopoly power, such as Google Maps.<br>
+<br>
+React Native...well you have to learn React. But it supposedly renders native UI components instead of using WebView<a data-tooltip-position="top" aria-label="https://www.jetbrains.com/help/kotlin-multiplatform-dev/cross-platform-frameworks.html" rel="noopener nofollow" class="external-link" href="https://www.jetbrains.com/help/kotlin-multiplatform-dev/cross-platform-frameworks.html" target="_blank">1</a><a data-tooltip-position="top" aria-label="https://appinventiv.com/blog/cross-platform-app-frameworks/" rel="noopener nofollow" class="external-link" href="https://appinventiv.com/blog/cross-platform-app-frameworks/" target="_blank">2</a>.&nbsp;This results in apps that are supposedly indistinguishable from those built using native languages like Objective-C or Java.<br>
+<br>
+.Xamarin... this is a Microsoft framework, requires C# and .NET. Yuck. I'd probably have to buy a windows machine. More Yuck. But, It compiles directly to native code, avoiding the use of WebView.<br>
+<br>
+Ionic looks pretty good, but it's just a javascript/typescript thing?  I don't really know, but as of 2025 it's more popular than Quasar, so that does say something.<br>
+<br>
+Quasar - so far, given that I'm primarily developing with Vue.js, I haven't found a better framework to develop in.<br>
+<br>
+Some more notes Per research further discussion:<br>
+<br>
+Ionic and Quasar are both popular frameworks for cross-platform app development, but they have some key differences:<br>
+<br>
+Performance and Rendering<br>
+<br>
+Ionic relies on WebView for app rendering, which can sometimes result in performance issues<a data-tooltip-position="top" aria-label="https://stackshare.io/stackups/ionic-vs-quasar-framework" rel="noopener nofollow" class="external-link" href="https://stackshare.io/stackups/ionic-vs-quasar-framework" target="_blank">1</a>.&nbsp;Quasar, on the other hand, takes advantage of platform-specific features, potentially offering better performance and a more native feel<a data-tooltip-position="top" aria-label="https://stackshare.io/stackups/ionic-vs-quasar-framework" rel="noopener nofollow" class="external-link" href="https://stackshare.io/stackups/ionic-vs-quasar-framework" target="_blank">1</a>.
+ Challenges of WebView-Based Frameworks
+
+<br>
+Performance Limitations: WebViews may not match the speed or responsiveness of fully native apps due to additional rendering layers<a data-tooltip-position="top" aria-label="https://stackoverflow.com/questions/15024400/is-it-useful-using-webview-whole-layout-in-native-android-app" rel="noopener nofollow" class="external-link" href="https://stackoverflow.com/questions/15024400/is-it-useful-using-webview-whole-layout-in-native-android-app" target="_blank">2</a><a data-tooltip-position="top" aria-label="https://felgo.com/mobile-app-framework-comparison" rel="noopener nofollow" class="external-link" href="https://felgo.com/mobile-app-framework-comparison" target="_blank">4</a>.
+
+<br>
+Device Compatibility Issues: Variations in WebView implementations across operating systems can lead to inconsistent behavior<a data-tooltip-position="top" aria-label="https://felgo.com/mobile-app-framework-comparison" rel="noopener nofollow" class="external-link" href="https://felgo.com/mobile-app-framework-comparison" target="_blank">4</a>.
+
+<br>
+Limited Access to Native Features: While plugins can bridge some gaps, certain advanced device functionalities may not be accessible<a data-tooltip-position="top" aria-label="https://stackoverflow.com/questions/15024400/is-it-useful-using-webview-whole-layout-in-native-android-app" rel="noopener nofollow" class="external-link" href="https://stackoverflow.com/questions/15024400/is-it-useful-using-webview-whole-layout-in-native-android-app" target="_blank">2</a><a data-tooltip-position="top" aria-label="https://stackoverflow.com/questions/38157790/are-ios-android-apps-with-webview-only-considered-hybrid-or-web-apps" rel="noopener nofollow" class="external-link" href="https://stackoverflow.com/questions/38157790/are-ios-android-apps-with-webview-only-considered-hybrid-or-web-apps" target="_blank">6</a>.
+
+<br>
+User Experience Concerns: Apps relying heavily on WebViews may feel less fluid compared to native applications<a data-tooltip-position="top" aria-label="https://www.mobiloud.com/blog/native-app-vs-webview-app" rel="noopener nofollow" class="external-link" href="https://www.mobiloud.com/blog/native-app-vs-webview-app" target="_blank">7</a>.
+ Platform Support
+While Ionic primarily focuses on hybrid mobile applications, Quasar targets a broader range of platforms including mobile (iOS, Android) using Capacitor, desktop (Windows, Mac, Linux) using Electron, and web applications including SPA and SSR <a data-tooltip-position="top" aria-label="https://stackshare.io/stackups/ionic-vs-quasar-framework" rel="noopener nofollow" class="external-link" href="https://stackshare.io/stackups/ionic-vs-quasar-framework" target="_blank">1</a><a data-tooltip-position="top" aria-label="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" rel="noopener nofollow" class="external-link" href="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" target="_blank">2</a>.
+ UI Components and Design
+Ionic offers pre-built UI components following Material Design and Apple's Human Interface Guidelines<a data-tooltip-position="top" aria-label="https://stackshare.io/stackups/ionic-vs-quasar-framework" rel="noopener nofollow" class="external-link" href="https://stackshare.io/stackups/ionic-vs-quasar-framework" target="_blank">1</a>. (Ionic seems to have an Apple bias)<br>
+Quasar provides a more extensive set of components and styling options, offering both Material Design and iOS-style components<a data-tooltip-position="top" aria-label="https://stackshare.io/stackups/ionic-vs-quasar-framework" rel="noopener nofollow" class="external-link" href="https://stackshare.io/stackups/ionic-vs-quasar-framework" target="_blank">1</a><a data-tooltip-position="top" aria-label="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" rel="noopener nofollow" class="external-link" href="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" target="_blank">2</a>.
+ Framework Base
+Ionic can be used with various JavaScript frameworks, while Quasar is built specifically on Vue.js, offering seamless integration with Vue's ecosystem<a data-tooltip-position="top" aria-label="https://stackshare.io/stackups/ionic-vs-quasar-framework" rel="noopener nofollow" class="external-link" href="https://stackshare.io/stackups/ionic-vs-quasar-framework" target="_blank">1</a><a data-tooltip-position="top" aria-label="https://www.linkedin.com/pulse/what-quasar-framework-why-leading-among-other-javascript-maitri-patel-qu1ef" rel="noopener nofollow" class="external-link" href="https://www.linkedin.com/pulse/what-quasar-framework-why-leading-among-other-javascript-maitri-patel-qu1ef" target="_blank">3</a>.
+Development Experience
+Quasar is often praised for its comprehensive toolset, which includes a wide range of UI components, layout elements, and helpers<a data-tooltip-position="top" aria-label="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" rel="noopener nofollow" class="external-link" href="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" target="_blank">2</a>.&nbsp;It also offers features like code splitting, lazy loading, and server-side rendering out of the box<a data-tooltip-position="top" aria-label="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" rel="noopener nofollow" class="external-link" href="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" target="_blank">2</a>.
+ Community and Ecosystem
+Ionic has a larger, more established community with extensive documentation and a broad range of plugins<a data-tooltip-position="top" aria-label="https://stackshare.io/stackups/ionic-vs-quasar-framework" rel="noopener nofollow" class="external-link" href="https://stackshare.io/stackups/ionic-vs-quasar-framework" target="_blank">1</a>.&nbsp;
+Quasar, while newer, has a growing community and offers a collection of ready-to-use plugins and integrations<a data-tooltip-position="top" aria-label="https://stackshare.io/stackups/ionic-vs-quasar-framework" rel="noopener nofollow" class="external-link" href="https://stackshare.io/stackups/ionic-vs-quasar-framework" target="_blank">1</a><a data-tooltip-position="top" aria-label="https://www.linkedin.com/pulse/what-quasar-framework-why-leading-among-other-javascript-maitri-patel-qu1ef" rel="noopener nofollow" class="external-link" href="https://www.linkedin.com/pulse/what-quasar-framework-why-leading-among-other-javascript-maitri-patel-qu1ef" target="_blank">3</a>.
+ Performance Optimization
+Quasar emphasizes performance with built-in features like code minification, source mapping, and tree shaking<a data-tooltip-position="top" aria-label="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" rel="noopener nofollow" class="external-link" href="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" target="_blank">2</a>.
+ Customization and Theming
+Quasar offers more extensive theming capabilities, including support for right-to-left (RTL) languages<a data-tooltip-position="top" aria-label="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" rel="noopener nofollow" class="external-link" href="https://www.bacancytechnology.com/blog/quasar-framework-full-frontend-stack" target="_blank">2</a>.
+In summary, while various frameworks have their strengths, Quasar seems to offer more flexibility in terms of platform support and potentially better performance, especially for Vue.js developers. However, Ionic's larger community and ecosystem might be advantageous for some projects.
+
+
+<br><br>This guide is divided into four major parts:<br>
+<br>
+Prerequisites for a Quasar / Vue project<br>
+Setting up your development environment <a data-tooltip-position="top" aria-label="^p1" data-href="#^p1" href="about:blank#^p1" class="internal-link" target="_self" rel="noopener nofollow">link</a>
+
+<br>
+Project Planning<br>
+What you need to consider before starting <a data-tooltip-position="top" aria-label="^90b947" data-href="#^90b947" href="about:blank#^90b947" class="internal-link" target="_self" rel="noopener nofollow">link</a>
+
+<br>
+Project Setup Steps<br>
+Detailed configuration steps with thorough explanations <a data-tooltip-position="top" aria-label="^978f19" data-href="#^978f19" href="about:blank#^978f19" class="internal-link" target="_self" rel="noopener nofollow">link</a>
+
+<br>
+Launching Your Android Application in Dev<br>
+Getting your development environment running <a data-tooltip-position="top" aria-label="^p4" data-href="#^p4" href="about:blank#^p4" class="internal-link" target="_self" rel="noopener nofollow">link</a>
+
+<br><br> <br><br>There are 3 steps:<br>
+-have Node, nvm and npm installed<br>
+-verify Android Studio install<br>
+-set environment variables<br><br>First, let's verify the development environment<br>==Important DO NOT IGNORE:  ==<br>
+As of Feb 2025, default Quasar &amp; Capacitor (v6) required Node v18.<br>
+This will probably change, hence why having node version manager (nvm) is essential.<br>Terminal commands:<br>node --version  # Should be &gt;=18.0.0
+npm --version   # Should be &gt;=6.13.4
+nvm --version   # Check if nvm is installed
+<br>If nvm is not installed:<br># For macOS using brew
+brew install nvm
+<br>After installation, add these lines to your ~/.zshrc or ~/.bash_profile:<br>export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] &amp;&amp; \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] &amp;&amp; \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+<br>Reload your terminal configuration:<br>source ~/.zshrc  # or source ~/.bash_profile
+<br>Verify nvm installation:<br>nvm --version
+<br>If Node.js version is not 18:<br># Install Node.js 18
+nvm install 18
+
+# Use Node.js 18
+nvm use 18
+
+# Verify the version
+node --version  # Should show v18.x.x (for Capacitor v6)
+<br>To use a specific version directly, use the terminal command:<br>nvm use &lt;version&gt;
+<br>Per research NPM - NPX:
+
+npm and npx are both tools used in Node.js development, but they serve different purposes:<br>
+npm (Node Package Manager)
+
+<br>Used for installing and managing packages in Node.js projects
+<br>Primarily handles package installation, either locally or globally
+<br>Manages dependencies listed in the package.json file
+<br>Requires packages to be installed before they can be used
+<br>Usage: npm install &lt;package&gt;
+
+npx (Node Package Execute)
+
+<br>Executes Node.js packages without requiring installation
+<br>Allows running packages directly from the npm registry
+<br>Ideal for one-time or infrequent package usage18
+<br>Can run different versions of packages without conflicts
+<br>Usage: npx &lt;package&gt;
+
+
+<br>Per research: Node Modules
+
+The node_modules folder plays a crucial role in your Quasar and Capacitor project, as it does in most Node.js-based applications:
+Dependency Storage:<br>
+node_modules is where all the external libraries and packages that your project depends on are stored15. This includes Quasar, Capacitor, and any other packages you've installed using npm or yarn.
+Local Package Access:<br>
+When you import a package in your code, Node.js looks for it in the node_modules folder1. This allows your application to use these dependencies without needing to specify their full path.
+Project-Specific Dependencies:<br>
+Each project has its own node_modules folder, ensuring that different projects can use different versions of the same package without conflicts.
+Automatic Management:<br>
+When you run npm install or yarn install, the package manager reads your package.json file and downloads all the required dependencies into the node_modules folder.
+Exclusion from Version Control:<br>
+The node_modules folder is typically not included in version control systems like Git due to its large size35. Instead, developers share the package.json file, which lists all the dependencies.
+Recreating Dependencies:<br>
+Other developers can recreate the node_modules folder on their machines by running npm install or yarn install, using the package.json as a reference.
+For Quasar and Capacitor specifically:
+
+<br>These frameworks, along with their dependencies, are stored in node_modules when you set up your project
+<br>When you add Capacitor plugins to your Quasar project, they are installed into the node_modules folder
+<br>Remember, if you're having issues with missing modules after cloning a repository or switching branches, try deleting the node_modules folder and package-lock.json file, then running npm install again to ensure all dependencies are correctly installed4
+
+
+<br><br>Open Android Studio and verify the following:<br>Go to Tools &gt; SDK Manager<br>
+Under "SDK Platforms" ensure you have:<br>
+<br>Android 14.0 (API 34) or latest stable
+<br>Android 13.0 (API 33)
+<br>Under "SDK Tools" verify you have:<br>
+<br>Android SDK Build-Tools
+<br>Android SDK Command-line Tools
+<br>Android Emulator
+<br>Android SDK Platform-Tools
+<br><br>Add to ~/.zshrc or ~/.bash_profile:<br>export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+<br>What environment variables do
+What These Lines Do:
+export ANDROID_HOME=$HOME/Library/Android/sdk:
+
+<br>Sets the ANDROID_HOME environment variable to the directory where the Android SDK is installed
+<br>The ANDROID_HOME variable is used by many Android tools to locate the SDK
+<br>Tools like Gradle, Android Studio, and command-line utilities rely on this variable
+
+export PATH=$PATH:$ANDROID_HOME/tools:
+
+<br>Appends the tools directory inside the Android SDK to your system's PATH
+<br>Allows you to run commands like android from any location without typing the full path
+
+export PATH=$PATH:$ANDROID_HOME/platform-tools:
+
+<br>Appends the platform-tools directory to your system's PATH
+<br>Contains essential utilities like adb (Android Debug Bridge) and fastboot
+
+Why This Is Important:
+
+<br>Makes Android development tools easily accessible from the command line
+<br>Eliminates need to type full paths to tools
+<br>Essential for tasks like building apps, managing emulators, or debugging devices
+
+How It Works in Practice:<br>
+After adding these lines to your .zshrc, you can:
+
+<br>Use commands like adb devices or emulator -avd &lt;avd_name&gt; directly
+<br>Run Gradle builds or other tasks that depend on the Android SDK
+
+<br>To apply these changes immediately after editing .zshrc, run:<br>source ~/.zshrc
+<br>This will reload your shell configuration and make the environment variables available in your current terminal session.<br><br> ^p2<br>
+Before you begin scaffolding Quasar, think carefully about the following names: <br>
+<br>Directory &amp; Name
+<br>Product Name
+<br>App ID
+<br>Capacitor AppName
+<br>Notes on naming
+
+Plan the naming of your project name-directory-folder.
+
+<br>You will be using cd a lot, so don't get too carried away: keep it simple
+<br>This will also be the "name" in your root package.json file
+<br>This is typically lowercase, no spaces
+<br>Used for the project directory and npm package name
+<br>Best practice: Use kebab-case (e.g., "my-map-app") or single words
+
+
+Product Name ("productName" in root package.json):
+
+<br>This is the user-friendly display name
+<br>Can include spaces and proper capitalization
+<br>This often appears in the app launcher, title bar, etc.
+
+
+Capacitor App ID (appId in capacitor.config.json):
+
+<br>Should follow reverse domain name notation
+<br>Format: com.company.appname
+<br>In my case I used a GitHub Pages domain: "com.abcdefg2.org"
+<br>Best practice: Use a domain you control
+<br>This is important for app stores and must be unique
+<br>Even if you are creating an Android app, you could still launch a test as a spa
+
+
+Capacitor App Name (appName in capacitor.config.json):
+
+<br>Usually matches the productName in package.json
+<br>This is what shows under the app icon
+
+<br><br>This section provides detailed instructions for setting up your Quasar project with Capacitor for Android development. Follow these steps in order: <br><br><br>Installation and configuration of the Quasar Command Line Interface <a data-tooltip-position="top" aria-label="Part 3A - Install Quasar CLI" data-href="#Part 3A - Install Quasar CLI" href="about:blank#Part_3A_-_Install_Quasar_CLI" class="internal-link" target="_self" rel="noopener nofollow">link</a><br><br>Creating the base Quasar &amp; Vue project structure <a data-tooltip-position="top" aria-label="Part 3B - Scaffold Quasar / Vue" data-href="#Part 3B - Scaffold Quasar / Vue" href="about:blank#Part_3B_-_Scaffold_Quasar_/_Vue" class="internal-link" target="_self" rel="noopener nofollow">link</a><br><br>Integrating Capacitor framework with your Quasar project <a data-tooltip-position="top" aria-label="Part 3C - Add Capacitor to Quasar" data-href="#Part 3C - Add Capacitor to Quasar" href="about:blank#Part_3C_-_Add_Capacitor_to_Quasar" class="internal-link" target="_self" rel="noopener nofollow">link</a><br><br>Setting up the Android platform configuration<a data-tooltip-position="top" aria-label="Part 3D Add Capacitor/android to project" data-href="#Part 3D Add Capacitor/android to project" href="about:blank#Part_3D_Add_Capacitor/android_to_project" class="internal-link" target="_self" rel="noopener nofollow">link</a><br><br>Preparing the distribution directory for your application<a data-tooltip-position="top" aria-label="Part 3E Create Dist/Spa Directory" data-href="#Part 3E Create Dist/Spa Directory" href="about:blank#Part_3E_Create_Dist/Spa_Directory" class="internal-link" target="_self" rel="noopener nofollow">link</a><br><br>Synchronizing Quasar and Capacitor configurations<a data-tooltip-position="top" aria-label="Part 3F Sync Your Project" data-href="#Part 3F Sync Your Project" href="about:blank#Part_3F_Sync_Your_Project" class="internal-link" target="_self" rel="noopener nofollow">link</a><br><br>Adding and configuring Capacitor plugins<a data-tooltip-position="top" aria-label="Part 3G Install Capacitor Plugins" data-href="#Part 3G Install Capacitor Plugins" href="about:blank#Part_3G_Install_Capacitor_Plugins" class="internal-link" target="_self" rel="noopener nofollow">link</a><br>Each step will be covered in detail in its own section. Follow the steps sequentially to ensure proper setup of your development environment.<br><br>In your project directory, first check the install of the Quasar CLI: <br>quasar --version
+<br>The above command will return the CLI version if installed, something like:<br>@quasar/cli 2.4.1
+<br>Run the Quasar CLI install command if not already installed:<br>npm i -g @quasar/cli
+<br>Note also that you can run the following command:<br>quasar info
+<br>This will show a complete report of your Quasar project (if the Quasar framework project has been scaffolded).<br><br><img alt="quasar.png" src="quasarscaffold/quasar.png"> <br> ^stepB<br>
+To initialize and scaffold the Quasar and Vue.js project: ^967f74<br>
+-Create Quasar project<br>
+-Install and verify<br>
+-Test initial build<br><br>Run this command:<br>npm init quasar@latest
+<br>Or run this command:<br>npm create quasar
+<br>As of Feb 2025, I can't determine definitively which of the above commands is better.   Either command will then prompt the same set of selection options: see note below. <br>If npm hangs
+The command "npm init quasar@latest" will often hang on this last step:
+✔ Install project dependencies? (recommended) › Yes, use npm
+
+It may fail with this message:
+npm error code UNABLE_TO_GET_ISSUER_CERT_LOCALLY
+npm error errno UNABLE_TO_GET_ISSUER_CERT_LOCALLY
+npm error request to https://registry.npmjs.org/@eslint%2fjs failed, reason: unable to get local issuer certificate
+
+When this happens, you'll see:
+Quasar • ⚠️  Could not auto install dependencies. Probably a temporary npm registry issue?
+Quasar • Initialized Git repository 🚀
+
+To get started:
+`cd yourprojectfolder`
+yarn #or:` `npm install`
+ yarn lint --fix # or: `npm run lint -- --fix`
+quasar dev # or: yarn quasar dev # or: `npx quasar dev`
+
+Documentation can be found at: <a rel="noopener nofollow" class="external-link" href="https://quasar.dev" target="_blank">https://quasar.dev</a>
+This is why you often need to run npm install and npx cap sync. Note there doesn't seem to be any harm in running these two commands multiple times.
+<br>detailed list of selection options
+
+<br>? What would you like to build?
+<br>Select: App with Quasar CLI, let's go! - spa/pwa/ssr/bex/electron/capacitor/cordova
+<br>Project folder: &lt;your project folder name&gt;
+<br>Select: Quasar v2 (Vue 3) latest and greatest - recommended
+<br>Choose: Javascript or TypeScript (Javascript is easier for beginners)
+<br>Select: Quasar App CLI with Vite 6 (v2) - recommended (Important!)
+<br>Package name: &lt;whatever you need-could be project folder name&gt;
+<br>Project product name: Must start with letter if building mobile apps (e.g., My Quasar App)
+<br>Project description: A Quasar test
+<br>Select: Composition API with &lt;script setup&gt;
+<br>Pick your CSS preprocessor: Sass with SCSS syntax
+<br>Check the features needed for your project:
+<br>Vue Router (Yes)
+<br>Pinia (Yes)
+<br>ESLint (Yes)
+<br>Install dependencies (Yes)
+
+<br><br>Change directories into the project root:<br>cd &lt;your project folder&gt;
+<br>Then run:<br>npm install
+<br>Verify the terminal output resulting from the install<br>What npm install does
+Running "npm install" performs the following actions:
+Installs Dependencies:
+
+<br>Reads the package.json file to identify all dependencies
+<br>Downloads dependencies from npm registry
+<br>Installs them into the node_modules folder
+
+Creates or Updates package-lock.json:
+
+<br>Uses existing package-lock.json if it exists
+<br>Generates new one if it doesn't exist
+<br>Locks dependency versions for consistency
+
+<br>Also run in your project root:<br>quasar info
+<br>
+<br>Check Quasar installation
+<br>Verify Vite is listed as the build tool
+quasar info terminal output
+following is when my project was pretty much fully scaffoled/configured
+Operating System - Darwin(23.5.0) - darwin/arm64<br>
+NodeJs - 18.20.6
+Global packages<br>
+NPM - 10.8.2<br>
+yarn - Not installed<br>
+pnpm - Not installed<br>
+bun - Not installed<br>
+@quasar/cli - 2.4.1<br>
+@quasar/icongenie - Not installed<br>
+cordova - Not installed
+Important local packages<br>
+quasar - 2.17.7 -- Build high-performance VueJS user interfaces (SPA, PWA, SSR, Mobile and Desktop) in record time<br>
+@quasar/app-vite - 2.1.0-- Quasar Framework App CLI with Vite<br>
+@quasar/extras - 1.16.17 -- Quasar Framework fonts, icons and animations<br>
+eslint-plugin-quasar - Not installed<br>
+vue - 3.5.13 -- The progressive JavaScript framework for building modern web UI.<br>
+vue-router - 4.5.0<br>
+pinia - 3.0.1 -- Intuitive, type safe and flexible Store for Vue<br>
+vite - 6.1.0 -- Native-ESM powered web dev build tool<br>
+vite-plugin-checker - Not installed<br>
+eslint - 9.20.1 -- An AST-based pattern checker for JavaScript.<br>
+esbuild - 0.24.2 -- An extremely fast JavaScript and CSS bundler and minifier.<br>
+typescript - Not installed<br>
+workbox-build - Not installed<br>
+register-service-worker - Not installed<br>
+electron - Not installed<br>
+@electron/packager - Not installed<br>
+electron-builder - Not installed<br>
+@capacitor/core - 6.0.0-- Capacitor: Cross-platform apps with JavaScript and the web<br>
+@capacitor/cli - 6.2.0-- Capacitor: Cross-platform apps with JavaScript and the web<br>
+@capacitor/android - 6.0.0-- Capacitor: Cross-platform apps with JavaScript and the web<br>
+@capacitor/ios - Not installed
+Quasar App Extensions<br>
+None installed
+Networking<br>
+Host - abcdefgh-MacBook-Air.local<br>
+en0 - 10.0.0.125
+
+
+<br><br>You will now want to make sure Quasar (and Vue) are working as a plain web app.<br>npm run dev    # Should open development server
+<br>Quasar Project Structure
+After running npm init quasar@latest your project structure should look like this:
+your-project/
+├── .quasar                  &lt;-quasar
+├── node_modules
+├── src/                     &lt;- src/ folder Vue project.
+│   ├── assets
+│   ├── components[[
+]]&gt;│   ├── layouts/
+│   │   └── MainLayout.vue
+│   ├── pages/
+│   │   ├── IndexPage.vue
+│   │   └── ErrorNotFound.vue           
+│   ├── routes/
+│   │   ├── index.js
+│   │   └── routes.js                      
+│   └── App.vue
+├── index.html
+├── package-lock.json
+├── package.json             &lt;- Pay close attention to dependency versions
+└── quasar.config.js         &lt;-quasar
+
+The above /src folder should look familiar to a Vue.js developer.<br>
+The package.json in the project root will have a dependency list similar to the following:
+{
+"dependencies": {
+   "@quasar/extras": "^1.16.4",   &lt;-quasar
+  "axios": "^1.2.1",
+  "pinia": "^3.0.1",
+  "quasar": "^2.16.0",           &lt;-quasar
+  "vue": "^3.4.18",
+   "vue-router": "^4.0.0"
+ },
+"devDependencies": {
+  "@eslint/js": "^9.14.0",
+   "@quasar/app-vite": "^2.1.0",  &lt;-quasar
+   "autoprefixer": "^10.4.2",
+   "eslint": "^9.14.0",
+   "eslint-plugin-vue": "^9.30.0",
+   "globals": "^15.12.0",
+   "postcss": "^8.4.14",
+   "vite-plugin-checker": "^0.8.0"
+ }
+}
+
+Note there are no Capacitor-related elements yet.
+<br><br>So, in summary to Part 3B, to initially scaffold the Quasar project, run these 3 commands:<br>npm i -g @quasar/cli
+npm init quasar@latest
+npm install
+<br>The above 3 commands will:<br>
+<br>Allow you to run Quasar CLI commands
+<br>Create an initially scaffolded Quasar-Vue project
+<br><br>There are a couple steps to install capacitor to a Quasar project.<br>
+-Add capacitor structures to project using Quasar command<br>
+-Add capacitor config to project root using npm commands<br>
+-Verify installation<br><br>Run the following Quasar command in your project root folder:<br>quasar mode add capacitor
+<br>The above Quasar command will prompt for:<br>
+What is the Capacitor app id? (org.capacitor.quasar.app)
+<br>The app id is reverse domain name notation (ref project planning notes)<br>The folder /src-capcitor will then be created in your project and the app id will go into the capacitor.config.json file.<br>The newly created src-capacitor structure will also hold the android structures in subsequent steps.<br><br>I recommend you review each of the notes below after running quasar mode add capacitor.<br>A Versioning Rant: Quasar defaults v6
+Running quasar mode add capacitor will probably default in older versions of capacitor (v6), as shown in the package.json in /src-capacitor folder (as of Feb 2025).
+Research indicates the Quasar team have the command quasar mode add capacitor default in a supposedly more stable versions of capacitor at v6 (but Capacitor plugins, as of Feb 2025, are at v7)
+The version is crucial!<br>
+Subsequent steps to install @capacitor/android and other capacitor plugins can run into version issues, because version 7 of @capacitor/android will default in, which will conflict with @capacitor/core at v6.
+You may see an error msg such as this:
+[warn] @capacitor/core@6.2.0 version doesn't match @capacitor/android@7.0.1 version.
+Consider updating to a matching version, e.g. w/ npm install @capacitor/core@7.0.1
+
+Attempts to upgrade capacitor/core might drag you down a rabbit hole of chained updates to your entire project, including Node.js.
+It appears that (as of Feb 2025) Capacitor v6 requires Node v18. 
+-But Capacitor v7 requires Node v20. 
+-But Node v20 doesn't apparently work with the Quasar version that is defaulted in my npm create quasar.
+So I recommend avoiding to attempts to upgrade individually.  And note: I was never able to land a clean working v7 Capacitor into my Quasar project.  Again: there seems to be no comprehensive versioning guide to install a Node-Vue-Quasar-Capacitor-Android-plugin stack. 
+here's some links to other notes ranting about version dependencies:<br>
+<a data-href="#P3D Step 1 Notes" href="about:blank#P3D_Step_1_Notes" class="internal-link" target="_self" rel="noopener nofollow">P3D Step 1 Notes</a><br>
+<a data-href="#P3G Step 1 Note 1 Versioning Challenges read" href="about:blank#P3G_Step_1_Note_1_Versioning_Challenges_read" class="internal-link" target="_self" rel="noopener nofollow">P3G Step 1 Note 1 Versioning Challenges read</a>
+<br>Notes on Quasar Install vs NPM install
+Running command quasar mode add capacitor in project root does of course negate the need to run specific NPM commands in a /src-capacitor folder:
+
+<br>npm install @capacitor/core
+<br>and
+<br>npm install @capacitor/cli
+
+Per research:
+
+Running "quasar mode add capacitor" does more than just installing the Capacitor core package.<br>
+Here's why it's important:
+
+<br>It sets up the Capacitor integration within your Quasar project structure.
+<br>It creates a dedicated "/src-capacitor" folder in your Quasar project, which contains the necessary configuration files for Capacitor.
+<br>It automatically adds platform-specific folders (ios and android) to your project root when you add those platforms.
+<br>It configures your Quasar project to work seamlessly with Capacitor, including setting up build processes and development scripts.
+<br>It ensures compatibility between Quasar and Capacitor versions, reducing potential conflicts.
+
+Simply running "npm install @capacitor/core" (in project root) would only install the core package without integrating it properly into your Quasar project structure or setting up the necessary configurations. The "quasar mode add capacitor" command provides a more comprehensive and streamlined setup for using Capacitor with Quasar
+
+Rant Alert: But, why running "quasar mode add capacitor" also does not update the package.json and node_mooules in the Quasar project root is simply inexplicable and exasperating.  It should, as this just creates extra steps and opportunities for error and confusion.
+<br>Warning Notes on npx cap init
+If your floundering around the internet attempting to figure out how to land a clean install of Quasar-Capacitor-Android, you will probably come across the cmnd:
+npx cap init
+
+This command npx cap init will create a completely new scaffold of your project right on-top of everything you've done with "quasar mode add capacitor". Thus you will either duplicate files and directories, or over-write files and directories...either way it's kind-of-mess. If using quasar to install capacitor, I recommend avoiding also using "npx cap init".
+<br>Recommend Examine Capacitor Project Structure &amp; package.json
+At the end of scaffolding capacitor when using the Quasar command quasar mode add capacitor, the project structure should look something like this:
+your-project/
+├── .quasar
+├── node_modules
+├── src/
+├── src-capacitor/        &lt;- new folder created
+│   ├── node_modules       &lt;- Yet another set of node_modules!
+│   ├── www
+│   ├── capacitor.config.json
+│   ├── package-lock.json
+│   └── package.json      &lt;- Yet another package.json file!
+├── index.html
+├── package-lock.json
+├── package.json
+└── quasar.config.js
+
+The package.json file under /src-capactor folder should look something like this:
+{
+"name": "gmap9",
+"version": "0.0.1",
+"description": "A Quasar Google Map test",
+"author": "abcdefg2 &lt;abcdefg2@icloud.com&gt;",
+"private": true,
+"dependencies": {
+   "@capacitor/app": "^6.0.0",     &lt;- v6!!!
+   "@capacitor/cli": "^6.0.0",     &lt;- v6!!!
+  "@capacitor/core": "^6.0.0".    &lt;- v6!!!
+}
+}
+
+Special Note: Notice above that Quasar defaulted in v6 capacitor!!!
+<br>Notes regarding capacitor app, core and cli
+Each of the files perform different function (duh)
+@capacitor/app<br>
+This is a specific Capacitor plugin that provides functionality related to the app itself.<br>
+It offers methods for handling app-level events and information, such as:
+
+<br>Detecting when the app is put into the background or brought to the foreground  
+<br>Accessing app information like build and version numbers 
+<br>Handling deep links  
+<br>Managing app exit events<br>
+It's an optional plugin that you can add to your project for additional app-specific functionality.<br>
+NOTE: @capacitor/app does not need a separate install step in the root package.json.
+
+@capacitor/core:<br>
+This is the main package that provides the core functionality and APIs for Capacitor.<br>
+It contains the JavaScript runtime that allows web apps to interact with native platform features.<br>
+It's used in your web application code to access Capacitor's APIs and plugins.<br>
+It provides a consistent API layer that works across all platforms (iOS, Android, and web).<br>
+NOTE: @capacitor/core  does need  a separate step to install in the root package.json
+@capacitor/cli<br>
+The @capacitor/cli is the Command Line Interface for Capacitor, a crucial tool for managing Capacitor projects. It provides several key functionalities:
+Project initialization: The CLI allows you to initialize new Capacitor projects with the "npx cap init" command<a data-tooltip-position="top" aria-label="https://github.com/ionic-team/capacitor" rel="noopener nofollow" class="external-link" href="https://github.com/ionic-team/capacitor" target="_blank">5</a>.
+. Platform management: It enables adding native platforms to your project, such as iOS and Android, using commands like "npx cap add android" or "npx cap add ios"<a data-tooltip-position="top" aria-label="https://github.com/ionic-team/capacitor" rel="noopener nofollow" class="external-link" href="https://github.com/ionic-team/capacitor" target="_blank">5</a>.
+. Project synchronization: The CLI facilitates syncing your web app with native projects using "npx cap sync"<a data-tooltip-position="top" aria-label="https://app.studyraid.com/en/read/11146/345586/definition-and-purpose-of-capacitor" rel="noopener nofollow" class="external-link" href="https://app.studyraid.com/en/read/11146/345586/definition-and-purpose-of-capacitor" target="_blank">1</a>.
+Plugin management: It helps in adding, removing, and updating Capacitor plugins<a data-tooltip-position="top" aria-label="https://ionic.zone/capacitor/overview" rel="noopener nofollow" class="external-link" href="https://ionic.zone/capacitor/overview" target="_blank">3</a>.
+ Build and run: The CLI assists in building and running your app on different platforms<a data-tooltip-position="top" aria-label="https://ionic.zone/capacitor/overview" rel="noopener nofollow" class="external-link" href="https://ionic.zone/capacitor/overview" target="_blank">3</a>.
+Project configuration: It allows you to manage and update your project's configuration settings<a data-tooltip-position="top" aria-label="https://ionic.zone/capacitor/overview" rel="noopener nofollow" class="external-link" href="https://ionic.zone/capacitor/overview" target="_blank">3</a>.
+Code copying: The CLI handles copying your web app's code to native platforms and updating plugin code in native projects<a data-tooltip-position="top" aria-label="https://ionic.zone/capacitor/overview" rel="noopener nofollow" class="external-link" href="https://ionic.zone/capacitor/overview" target="_blank">3</a>.
+ NOTE: @capacitor/cli  does need  a separate step to install in the root package.json
+The Capacitor CLI is typically installed as a development dependency in your project, ensuring that different projects can use different CLI versions if needed**
+<br>Notes on capacitor.config.json file.
+The capacitor.config.json file will probably initially look something like this:
+{
+"appId": "com.abcdefg2.org",
+"appName": "My Gmap9 Test",
+"webDir": "www"
+}
+
+The webDir will probably need to be changed at some point to "dist/spa".<br>
+The dist/spa directory is created in a following step.<br>
+As far as I can determine, the "www" is a default webpack configuration,<br>
+and "dist/spa" is a Quasar thing.
+If you don't change the webDir, you will might get a common bug that results in a white-screen on android.
+There is a specific section, Part 3 E Create /dist directory which will discuss the webDir in more detail.
+<br><br>You MUST manually install the @capacitor/cli and the @capacitor/core modules in the project root!  ***Make sure root install matches the version in /scr-capacitor<br>Change directories to your project root.<br>In your project root directory first run:<br>npm install @capacitor/cli@6
+<br>Then run:<br>npm install @capacitor/core@6
+<br>Important Notes on CLI &amp; Core in Root
+CRUCIAL!!!     DO NOT IGNORE THIS NOTE!!!<br>
+Add Capacitor cli and core to the package.json file in Root Directory for Vite web build.
+Running "quasar mode add capacitor" in the root directory only creates src-capacitor folder and the capacitor related files configurations in the /src-capcitor directory.
+The command "quasar mode add capacitor" does not however update the package.json file or update the node_modules in the project root, which turns out to be (as of Feb 2025) absolutely crucial.
+Per research:
+
+Point 1<br>
+Why@capacitor/core Must Be Installed in the Root of the Quasar Project.
+Ensures Compatibility with Quasar's Web Build System
+
+<br>Quasar's frontend relies on Webpack (or Vite) for bundling the application.
+<br>The Capacitor plugins and API calls (import { Camera } from '@capacitor/camera') are part of this web build process.
+<br>If @capacitor/core is not in root node_modules, Quasar's Webpack build may not resolve, leading to "module not found" errors.
+
+
+Point 2: Install in Project Root? Or just in /src-capacitor?
+ Which capacitor plugins features-plugins-components-api (what ever you want to call them) do you need to install in the project root so it just updates the root package.json and the node_modules?
+And which capacitor plugins to only install into the /src-capacitor folder so it only updates the package.json file and node_modules in the /src-capacitor folder?
+It turns out this is nearly pure guess-work.
+There is no definitive chart or guide. As of Feb 2025, here's a little bit of what I've learned through arduous trial and error and endless floundering around on the internet.
+The heuristic rule of thumb seems to be:
+
+<br>Native? or not Native?<br>
+If the capacitor feature is going to exercise native phone features, such as haptics or camera, only install in just /src-capacitor.
+
+Examples:<br>
+Install in both project root and src-capacitor:
+
+<br>@capacitor/core
+<br>@capacitor/geolocation
+
+Install in just /src-capacitor:
+
+<br>@capacitor/android
+
+<br>Recommend ReExamine Root package.json
+The package.json file dependencies in the project root should subsequently look something like the json file below.  Note the addition of the capacitor cli and core.
+{
+"dependencies": {
+  "@capacitor/cli": "^6.2.0",  &lt;- match package.json in src-capacitor folder
+  "@capacitor/core": "^6.2.0", &lt;- match package.json in src-capacitor folder
+   "@quasar/extras": "^1.16.4",
+  "axios": "^1.2.1",
+   "pinia": "^3.0.1",
+  "quasar": "^2.16.0",
+   "vue": "^3.4.18",
+  "vue-router": "^4.0.0"
+},
+ "devDependencies": {
+  "@eslint/js": "^9.14.0",
+   "@quasar/app-vite": "^2.1.0",
+  "autoprefixer": "^10.4.2",
+   "eslint": "^9.14.0",
+   "eslint-plugin-vue": "^9.30.0",
+   "globals": "^15.12.0",
+   "postcss": "^8.4.14",
+   "vite-plugin-checker": "^0.8.0"
+ }
+}
+
+<br><br>Check the capacitor CLI version in project root:<br>npx cap --version
+<br>Change directories into the /src-capacitor folder:<br>cd src-capacitor
+<br>Then run to check capacitor in /src-capacitor:<br>npm list @capacitor/core
+<br>The capacitor core version, which should match package.json.<br><br>Now we can start configuring things to actually create an Android app.  These steps will allow Android Studio to launch.<br>NOTE: The @capacitor/android is native and only needs installed in the /src-capacitor folder.<br>The install of capacitor android is a two step process.  As an analogy: think about this as repairing your car:<br>
+<br>First go to the parts store and get the car parts.
+<br>And then you actually bolt the parts to the car.
+<br><br>The step is like going to the automotive store to get your car parts.<br>Be sure and change directories into the /src-capacitor directory-folder:<br>cd src-capacitor
+<br>then<br>npm install @capacitor/android@6.0.0
+<br>The package.json file in /src-capacitor folder should then look something like this:<br>{
+  "name": "gmap9",
+  "version": "0.0.1",
+  "description": "A Quasar Google Map test",
+  "author": "abcdefg2 &lt;abcdefg2@icloud.com&gt;",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",   &lt;- android added
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  }
+}
+<br><br>Notes about capacitor android versioning
+Warning Note:<br>
+Just running the following will default in android v7.
+npm install @capacitor/android
+
+This v7 android will conflict with the the v6 capacitor/core that Quasar defaulted.
+Check your package.json file in /src-capacitor
+Run following command to stay compatible with package.json versions in src-capacitor folder, if of course your cli and core are at v6:
+npm install @capacitor/android@6.0.0
+
+Link to other notes &amp; rantsabout versioning issues:<br>
+<a data-href="#P3C Step 1 Notes" href="about:blank#P3C_Step_1_Notes" class="internal-link" target="_self" rel="noopener nofollow">P3C Step 1 Notes</a><br>
+<a data-href="#P3G Step 1 Note 1 Versioning Challenges read" href="about:blank#P3G_Step_1_Note_1_Versioning_Challenges_read" class="internal-link" target="_self" rel="noopener nofollow">P3G Step 1 Note 1 Versioning Challenges read</a>
+Here is a link to the official Capacitor documentation on the @capacitor/android package, (and it really doesn't tell you much about versioning):<br>
+<a rel="noopener nofollow" class="external-link" href="https://capacitorjs.com/docs/android#adding-the-android-platform" target="_blank">https://capacitorjs.com/docs/android#adding-the-android-platform</a>
+<br>Note: just add android to /src-capacitor
+
+Per research:
+
+Unlike @capacitor/core, which is needed in both the web and native contexts, @capacitor/android is a native platform package that is only needed by the Android project inside src-capacitor.
+🚨 Problems If Installed in the Root:
+
+<br>Not Needed for Web Builds: The root Quasar project does not need @capacitor/android, as it does not run any Android-specific code.
+<br>Potential Dependency Conflicts: Installing @capacitor/android at the root can sometimes cause conflicts when running npx cap sync, as Capacitor expects platform dependencies inside src-capacitor.
+
+
+<br>Notes on native runtime
+Per research:
+
+Why @capacitor/whateverplugin usually needs to be Installed In just /src-capacitor:
+(a) Native Runtime Dependency for Capacitor's Native Code
+
+<br>The src-capacitor directory is where Capacitor's native project (Android/iOS) is initialized.
+<br>The native build system (gradle for Android, CocoaPods for iOS) may require @capacitor/core to be present.
+<br>When you run npx cap sync, it scans src-capacitor to gather necessary dependencies for native builds.
+
+(b) Ensures Proper Dependency Resolution for Native Plugins<br>
+Some Capacitor plugins rely on @capacitor/core being locally available inside src-capacitor to properly initialize.
+
+<br>If @capacitor/core missing, commands like npx cap sync or npx cap run could have errors where native plugins cannot find Capacitor core runtime
+
+(c) There are exceptions (of course) to installing plugins in the project root: native platform package. (meaning: if the plugin is native android, probably don't install in project root).
+
+<br><br>This step is like actually bolting the car parts to your car.<br>Run the following in the /src-capacitor folder:<br>npx cap add android
+<br>The above command npx cap add android will actually create the /android folder-directory within the /src-capacitor folder.<br>When you run npx cap add android, Capacitor is looking at the capacitor.config.json file.<br>your-project/
+├── .quasar
+├── node_modules
+├── src/
+├── src-capacitor/
+│   ├── node_modules       
+│   ├── www
+│   ├── android/               &lt;- location of android
+│   ├── capacitor.config.json
+│   ├── package-lock.json
+│   └── package.json
+├── index.html
+├── package-lock.json
+├── package.json
+└── quasar.config.js
+<br><br>Android Project Structure Detail
+Note 1: Android Project Structure
+Inside the /src-capacitor folder:<br>
+After running npx cap add android, the generated /android folder follows a standard Android project structure that should look something like this:
+android/
+├── app/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/example/app/
+│   │   │   │   ├── MainActivity.kt
+│   │   │   ├── AndroidManifest.xml   &lt;- update capacitor plugins
+│   │   │   ├── res/
+│   │   │   │   ├── drawable/
+│   │   │   │   ├── layout/
+│   │   │   │   ├── mipmap/
+│   │   │   │   ├── values/
+├── build.gradle
+├── settings.gradle
+
+When you install a capacitor plugin you will probably need to manually update permission within the AndroidManifest.xml file.
+<br>MainActivity file
+Note 2: The MainActivity.kt File (Entry Point)
+This is the Kotlin (kt) language for Android...you might default in Java. Either will work.
+Located at:<br>
+src-capacitor/android/app/src/main/java/com/example/app/MainActivity.kt
+This file extends BridgeActivity, which is provided by Capacitor:
+package com.example.app
+import com.getcapacitor.BridgeActivity
+class MainActivity : BridgeActivity() {
+}
+
+What The above Means:
+
+<br>BridgeActivity is a Capacitor-provided class that acts as the bridge between the web code (your Quasar app) and the native Android layer.
+<br>This is where Capacitor loads the web content (index.html from your Quasar build).
+<br>You can extend this class to register additional native plugins.
+
+<br> AndroidManifest.xml file
+Note 3: AndroidManifest.xml (Native Configuration)
+Located at:<br>
+/src-capacitor/android/app/src/main/AndroidManifest.xml
+This file configures important settings like:
+
+<br>Permissions (e.g., Camera, Geolocation)
+<br>App name, package name
+<br>Main activity that launches on startup
+
+Example snippet below (please excuse the tick mark escape characters):<br>
+Note again when adding plugins, you will probably need to update permissions:
+`&lt;uses-permission...&gt;
+
+`&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"&gt;
+`&lt;package="com.example.app"&gt;`
+	
+	 `&lt;uses-permission android:name="android.permission.INTERNET" /&gt;`
+
+	`&lt;application
+		 android:allowBackup="true"
+		android:theme="@style/AppTheme"&gt;
+		`&lt;activity
+			android:name=".MainActivity"
+			 android:launchMode="singleTask"
+			android:theme="@style/AppTheme.NoActionBar"&gt;
+			 `&lt;intent-filter&gt;				
+			 `&lt;action android:name="android.intent.action.MAIN" /&gt;
+			 &lt;/intent-filter&gt;
+		 `&lt;/activity&gt;
+	 `&lt;/application&gt;
+`&lt;/manifest&gt;`
+
+<br>Kotlin or Java File
+
+Per research:
+
+If you install native plugins (e.g., Camera, Filesystem), Capacitor will automatically integrate them.<br>
+For example, if you install the capacitor camera plugin:
+npm install @capacitor/camera
+npx cap sync
+
+It will register in Kotlin automatically. If needed, you can manually add them to MainActivity.kt:
+import com.getcapacitor.BridgeActivity
+import com.getcapacitor.Plugin
+import com.getcapacitor.community.camera.CameraPlugin
+
+class MainActivity : BridgeActivity() {
+  init {
+      registerPlugin(CameraPlugin::class.java)
+  }
+}
+
+
+<br><br>Verify installation in the /src-capacitor folder:<br>npm list @capacitor/android
+ls android/  # Should show complete Android project structure
+<br>How Android Works in a Quasar/Capacitor App:
+
+<br>Your Quasar app runs inside a WebView on the Android.
+<br>Note: some developers do not like WebView for various reasons, such as performance.  
+<br>Capacitor provides a JavaScript-to-Native bridge, allowing Quasar to interact with the native Android layer.
+<br>Kotlin is only used when you need to modify native functionality (e.g., adding custom plugins or tweaking the Android behavior).
+
+<br><br>Additionally, there is yet another step:<br>
+<br>Create a /dist directory
+<br>To build your Quasar app for production generate the /dist directory with terminal command in the root directory:<br>quasar build
+<br>This will create a new /dist directory:<br>your-project/
+├── .quasar
+├── dist/             &lt;- new dist directory
+├── node_modules
+├── src/
+├── src-capacitor/
+├── index.html
+├── package-lock.json
+├── package.json
+└── quasar.config.js
+<br>Then update the capacitor.config.json file (in your /src-capacitor folder) to point to the correct web directory: "webDir": "dist/spa"<br>Notes on dist/spa
+Notes: per my research here's an explanation for the above step regarding dist/spa:
+
+When you scaffolded your project using quasar mode add capacitor, it defaulted to "www" instead of "dist/spa" for historical and compatibility reasons.
+The "www" directory is a common default for many web-based mobile frameworks, including Cordova, which Capacitor was designed to be compatible with. This default setting allows for easier migration from Cordova projects and maintains consistency with other hybrid mobile development tools.
+However, Quasar's build process typically outputs to the "dist/spa" directory for Single Page Applications. This mismatch between Quasar's output and Capacitor's default expectation is why you need to manually update the webDir in the capacitor.config.json file.
+To align Capacitor with Quasar's build output, you should change the webDir setting in your capacitor.config.json
+If you do not run "quasar build", and just launch a dev server locally, you can probably keep "webDir": "www" in capacitor.config.json file.
+
+<br><br>Now sync your project with Capacitor to ensure everything is up-to-date run command in the src-capacitor directory:<br>cd src-capacitor
+npx cap sync
+<br>Sync Details
+
+Run npx cap sync in the /src-capacitor folder to synchronize your web app with the Capacitor project.<br>
+This command does two things:
+
+<br>Copies your web assets to the native platforms
+<br>Updates native plugins and dependencies
+
+Optionally, you can run npx cap sync android in the /src-capacitor folder to specifically sync the Android platform.
+The npx cap sync command is crucial because it:
+
+<br>Copies the latest web assets from your specified webDir to the native platform folders.
+<br>Updates Capacitor and Cordova plugins, ensuring all native dependencies are in place.
+
+Running npx cap sync android is particularly useful when you're focusing on Android development, as it will sync only the Android platform, which can be faster than syncing all platforms.
+<br>Directory /src-capacitor importance
+
+Running npx cap sync in the root directory of your Quasar-Capacitor project doesn't work because Quasar manages the Capacitor integration differently from a standard Capacitor project. Here's why:
+
+<br>
+Quasar's project structure: Quasar isolates Capacitor-related files in the /src-capacitor directory, including the relevant capacitor.config.json file.
+
+<br>
+Capacitor configuration: The capacitor.config.json file in the /src-capacitor folder is the one Capacitor uses directly when building and running our app.
+
+<br>
+Quasar CLI integration: Quasar CLI handles the Capacitor sync process when you run commands like quasar dev -m capacitor or quasar build -m capacitor.
+
+
+<br><br>And finally, now we can start adding Capacitor plugins that can work on a phone!  There are so many cool features that Capacitor has to offer. Here's a link: <a rel="noopener nofollow" class="external-link" href="https://capacitorjs.com/docs/plugins" target="_blank">https://capacitorjs.com/docs/plugins</a><br>Each time you add/install a capacitor plugin:<br>
+<br>You may need to run an&nbsp;npm install&nbsp;in two places!
+<br>Once in&nbsp;/src-capacitor, then again in the&nbsp;root.
+<br>And you should carefully inspect both&nbsp;package.json&nbsp;files to confirm versions.
+<br><br> Example: @capacitor/geolocation<br>Let's use the geolocation plugin as an example for how to go about installing a plugin into your scaffolded Quasar project (which again: defaulted in cli and core at v6).<br>cd into your src-capacitor directory:<br>cd src-capacitor
+<br>Then run the install of the capacitor plugin. Given my package.json capacitor/core version is v6 recommend run:<br>npm install @capacitor/geolocation@6.x
+<br>The same pattern (appending @6.x) should work for all the capacitor plugins.<br><br>More Versioning Rants
+⚠️ Warning: Just blindly following the Capacitor documentation might get you into a versioning conflict.
+Just running npm install @capacitor/geolocation will default in v7 (as of Feb 2025).
+This v7 will conflict with the capacitor core defaulted in with quasar mode add capacitor command, which  defaults in capacitor-core at v6 (as of Feb 2025).
+Oh, and good luck trying to find a comprehensive guide to a proper versioning for the software stack of:<br>
+....Node,<br>
+........Quasar,<br>
+................Vue,<br>
+....................Capacitor,<br>
+..................... Capacitor-Android<br>
+... there simply isn't any comprehensive guide as far as I could discern after many hours of flogging the internet. 
+It's just trial and error. The documentation IMO is lacking.  
+This guide represents literally weeks of many, many scaffolding attempts to land a project that works (as of Feb 2025).  
+You're Welcome.
+link to other rants about versioning dependencies:<br>
+<a data-href="#P3C Step 1 Notes" href="about:blank#P3C_Step_1_Notes" class="internal-link" target="_self" rel="noopener nofollow">P3C Step 1 Notes</a><br>
+<a data-href="#P3D Step 1 Notes" href="about:blank#P3D_Step_1_Notes" class="internal-link" target="_self" rel="noopener nofollow">P3D Step 1 Notes</a>
+<br><br>Yes folks, yet more manual steps! Who said this would be easy? <br>For Android, you sometimes, but not always, have to manually update the AndroidManifest.xml file.<br>
+Do your own research! <br>Example:<br>
+Per Capacitor Documentation at following link: <a rel="noopener nofollow" class="external-link" href="https://capacitorjs.com/docs/apis/geolocation" target="_blank">https://capacitorjs.com/docs/apis/geolocation</a><br>Find your AndroidManifest.xml file, which should be under:<br>
+/scr-capacitor     /android<br>
+/app             /src<br>
+/main<br>For the geolocation plugin, per capacitor, put the following into the AndroidManifest.xml file:<br>&lt;!-- Geolocation Plugin --&gt;
+&lt;uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /&gt;
+&lt;uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /&gt;
+&lt;uses-feature android:name="android.hardware.location.gps" /&gt;
+<br><br>And yes my friends, for this particular geolocation plugin, you also have to install in the project root.<br>So, cd to your project root, and run:<br>npm install @capacitor/geolocation@6.x
+<br><br>At this point I highly recommend you inspect both package.json file, in project root and in /src-capacitor to insure the plugin is in fact installed. They should look similar to what's below. (Note: a slight variation in capacitor versions between root and /src-capacitor didn't seem to cause issues).<br>Package.json in project root:<br>
+<img alt="json-root.png" src="quasarscaffold/json-root.png"><br>
+Package.json in /src-capacitor:<br>
+<img alt="jsonsrc-capacitor.png" src="quasarscaffold/jsonsrc-capacitor.png"><br><br>And finally, always after installing plugins or making other updates, be sure and run in your /src-capacitor folder:<br>npx cap sync
+<br>Wasn't that a journey! And now, finally you might actually be able to do some actual development.<br><br> <br><br>To finally launch the app in development, run:<br>quasar dev -m capacitor -T android
+<br>The above command translates/parses roughly as follows:<br>
+<br>quasar:                Hey Quasar,
+<br>dev:                      please launch a development server,
+<br>-m capacitor:    in mode capacitor,
+<br>-T android:        targeting android.
+<br>When you run the above command, a session of Android Studio should automagically launch. <br>You should be able to interact with your app in Android Studio, and on the test Android phone at the same time.<br><img alt="androidstudio.png" src="quasarscaffold/androidstudio.png"><br><br><img alt="AndroidPhone.png" src="quasarscaffold/androidphone.png"><br>
+When setting up your development environment:<br>
+<br>You will plug-tether your test Android phone into your development machine via USB (MacBook, etc).
+<br>Make sure your test Android phone has ==debug enabled.
+<br>Make sure that wifi is enabled on your test Android phone.
+<br>Make sure that your development machine (MacBook, etc) and the Android phone are on the same wifi network.
+<br>Note that wifi in coffee shops, gyms, airports, etc often won't work!...some sort of port-forwarding security issue.
+<br>Note that on the Android Studio you usually have to unplug the USB to your test phone and plug it back in to get it to hot-up and be recognized.
+<br><br>Also: HIGHLY RECOMMEND: use the chrome inspect devices tool!<br>Open a browser tab, put in:<br>chrome://inspect/#devices
+<br>When you launch the app you will be able to select your test Android phone and interact with it and show console log! This feature is so awesome!<br><img alt="chromeinspect2.png" src="quasarscaffold/chromeinspect2.png"><br><br>Let me thank Luke Diebold for his excellent video tutorials, as they gave a huge head start. Luke is just an outstanding educator. <br>Also a shout out goes to all my AI friends, especially Perplexity and Claude. Not once did these AI's ever roll their eyes and give back some sort of snarky answer to my endless questions. Without these AI's, this project would have been absolutely impossible. Although the AI's are often frustratingly dead wrong, they often nail the answers, and even the wrong answers sometimes offer important clues. Oh, but I found Copilot in VS Code kinda useless...just say'n. This is as of Feb 2025, so I'm sure things will improve.]]></description><link>quasarscaffold/quasarscaffold.html</link><guid isPermaLink="false">QuasarScaffold/QuasarScaffold.md</guid><pubDate>Sun, 09 Mar 2025 02:14:01 GMT</pubDate><enclosure url="quasarscaffold/logos.png" length="0" type="image/png"/><content:encoded>&lt;figure&gt;&lt;img src=&quot;quasarscaffold/logos.png&quot;&gt;&lt;/figure&gt;</content:encoded></item><item><title><![CDATA[README]]></title><description><![CDATA[ 
+ <br>Hello kind people of the internet.<br>This project attempts to create a software installation guide for getting a Quasar framework application initially scaffolded along with Capacitor to create an Android application.<br>This was created in Feb 2025 timeframe, so software versions quickly go stale-dated. <br>Never-the-less, if you are a newish programmer, and are also new to Quasar and Capacitor for creating an Android app, I do hope you find this guide helpful. ]]></description><link>quasarscaffold/readme.html</link><guid isPermaLink="false">QuasarScaffold/README.md</guid><pubDate>Wed, 05 Mar 2025 18:37:38 GMT</pubDate></item></channel></rss>
